@@ -1,0 +1,6 @@
+framework module Pods_QA {
+  umbrella header "Pods-QA-umbrella.h"
+
+  export *
+  module * { export * }
+}
