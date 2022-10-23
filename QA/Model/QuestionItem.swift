@@ -10,5 +10,5 @@ struct QuestionItem: Codable {
     let q: String
     let desp: String
     let answer: String
-//    let link: String
+    let link: [String]
 }

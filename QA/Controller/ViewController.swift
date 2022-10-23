@@ -12,51 +12,114 @@ import Koloda
 
 class ViewController: UIViewController {
 
-    @IBOutlet weak var helpBtn: UIImageView!
-    @IBOutlet weak var falseBtn: UIImageView!
-   
-    @IBOutlet weak var trueBtn: UIImageView!
+    @IBOutlet weak var questionDoneProgressLabel: UILabel!
+    @IBOutlet weak var yourScoreLabel: UILabel!
+    
+    @IBOutlet weak var helpBtn: UIButton!
+    @IBOutlet weak var falseBtn: UIButton!
+    @IBOutlet weak var trueBtn: UIButton!
     
     @IBOutlet weak var kolodaView: KolodaView!
-    var quetionsResult: QuestionsResult?
+    
+    var qaBrain = QABrain()
+    var containers = [CardViewController]()
+    
+    lazy var slideInTransitioningDelegate = SlideInPresentationManager()
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
-       
-        parseJSON()
+        
+        qaBrain.fetchQuestions()
+        updateUI()
+        
+        loadContainerView()
         
         kolodaView.layer.cornerRadius = 20
         kolodaView.clipsToBounds = true
         
         kolodaView.dataSource = self
         kolodaView.delegate = self
-    
+
     }
-        
-    private func parseJSON() {
-        guard let path = Bundle.main.path(forResource: "data", ofType: "json") else {
-            return
-        }
-        let url = URL(fileURLWithPath: path)
-        
-        
-        do {
-            let jsonData = try Data(contentsOf: url)
-            print(jsonData)
-            quetionsResult = try JSONDecoder().decode(QuestionsResult.self, from: jsonData)
     
-            if let result = quetionsResult {
-                print(result.Question)
-            }
-            else {
-                print("Failed to parse")
-            }
-            return
-        }
-        catch {
-            print("Error: \(error)")
+    override func viewDidAppear(_ animated: Bool) {
+        loadContainerView()
+        kolodaView.reloadData()
+    }
+    
+    func loadContainerView() {
+        for index in 0...(qaBrain.questionsList?.count ?? 0)-1 {
+            let vc = self.storyboard?.instantiateViewController(withIdentifier: "CardViewController") as! CardViewController
+            vc.question = qaBrain.questionsList![index]
+            self.addChildViewController(vc)
+                
+            containers.append(vc)
         }
     }
+    
+    @IBAction func answerBtnTapped(_ sender: UIButton) {
+        switch sender.tag {
+        case 1:
+            kolodaView.swipe(.right)
+            
+        case 2:
+            print("help")
+        case 3:
+            kolodaView.swipe(.left)
+            
+        default:
+            print("unknown button pressed")
+        }
+
+    }
+    func koloda(_ koloda: KolodaView, didShowCardAt index: Int) {
+        if index % 2 == 0 {
+            
+        }
+    }
+    
+    func koloda(_ koloda: KolodaView, didSwipeCardAt index: Int, in direction: SwipeResultDirection) {
+        
+        switch direction {
+        case .right, .topRight, .bottomRight:
+            qaBrain.checkAnswer("true")
+            self.performSegue(withIdentifier: K.goToResultSegue, sender: self)
+            
+            qaBrain.nextQuestion()
+
+            Timer.scheduledTimer(timeInterval: 0, target: self, selector: #selector(updateUI), userInfo: nil, repeats: false)
+            
+        case .left, .topLeft, .bottomLeft:
+            qaBrain.checkAnswer("false")
+            self.performSegue(withIdentifier: K.goToResultSegue, sender: self)
+            
+            qaBrain.nextQuestion()
+
+            Timer.scheduledTimer(timeInterval: 0, target: self, selector: #selector(updateUI), userInfo: nil, repeats: false)
+           
+        default:
+            break
+        }
+    }
+    
+    @objc func updateUI() {
+        yourScoreLabel.text = "Score: \(qaBrain.getScore())"
+        questionDoneProgressLabel.text = "Question: \(qaBrain.questionNumber+1) / \((qaBrain.questionsList?.count ?? 0))"
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == K.goToResultSegue {
+            let destinationVC = segue.destination as! AnswerViewController
+            destinationVC.question = qaBrain.questionsList?[qaBrain.questionNumber]
+            destinationVC.userGotIt = qaBrain.userGotIt
+            slideInTransitioningDelegate.direction = .bottom
+            slideInTransitioningDelegate.disableCompactHeight = true
+            destinationVC.transitioningDelegate = slideInTransitioningDelegate
+            destinationVC.modalPresentationStyle = .custom
+        }
+    }
+    
     
 }
 
@@ -67,10 +130,16 @@ extension ViewController: KolodaViewDelegate {
         koloda.reloadData()
     }
     
-    func koloda(_ koloda: KolodaView, didSelectCardAt index: Int) {
-        let alert = UIAlertController(title: quetionsResult?.Question[0].q, message: quetionsResult?.Question[index].q, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
-        self.present(alert, animated: true)
+    func kolodaShouldApplyAppearAnimation(_ koloda: KolodaView) -> Bool {
+        return true
+    }
+    
+    func kolodaShouldMoveBackgroundCard(_ koloda: KolodaView) -> Bool {
+        return false
+    }
+    
+    func kolodaShouldTransparentizeNextCard(_ koloda: KolodaView) -> Bool {
+        return false
     }
 }
 
@@ -78,15 +147,14 @@ extension ViewController: KolodaViewDelegate {
 // MARK: - Koloda Data Source Section
 extension ViewController: KolodaViewDataSource {
     func kolodaNumberOfCards(_ koloda: KolodaView) -> Int {
-        return quetionsResult?.Question.count ?? 0
+        return qaBrain.questionsList?.count ?? 0
     }
     
     func koloda(_ koloda: KolodaView, viewForCardAt index: Int) -> UIView {
-        let view = UILabel(frame: CGRect(x: 0, y: 0, width: 200, height: 21))
-        view.center = CGPoint(x: 160, y: 285)
-        view.textAlignment = .center
-        view.text = quetionsResult?.Question[index].q
-        return view
+
+        let container = containers[index]
+        
+        return container.view
     }
 }
 
