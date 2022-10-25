@@ -10,7 +10,7 @@ import UIKit
 
 class CardViewController: UIViewController {
 
-    @IBOutlet weak var questionLabel: UILabel!
+    @IBOutlet weak var questionLabel: UITextView!
     @IBOutlet var cardView: UIView!
     
     var question: QuestionItem?
@@ -19,6 +19,8 @@ class CardViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         questionLabel.text = question?.q
+        questionLabel.contentInset = UIEdgeInsets(top: 5, left: 0, bottom: 0, right: 0)
+        
         cardView.backgroundColor = cardViewColor
         cardView.tintColor = cardViewColor
     }

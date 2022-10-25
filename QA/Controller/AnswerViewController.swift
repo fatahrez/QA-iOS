@@ -14,7 +14,6 @@ class AnswerViewController: UIViewController {
     @IBOutlet weak var answerLabel: UILabel!
     @IBOutlet weak var questionLabel: UILabel!
     @IBOutlet weak var linksTextView: UITextView!
-    @IBOutlet weak var linkTableView: UITableView!
     
     var question: QuestionItem?
     var userGotIt: Bool?
@@ -22,27 +21,32 @@ class AnswerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        linkTableView.dataSource = self
-        
         if userGotIt == true {
-            userGotItLabel.text = "Your answer was right"
+            userGotItLabel.text = "Your answer is right!"
+            userGotItLabel.textColor = .systemGreen
+            userGotItLabel.layer.borderColor = UIColor.systemGreen.cgColor
+            userGotItLabel.layer.borderWidth = 2.0
+            userGotItLabel.layer.cornerRadius = 10
+            userGotItLabel.layer.masksToBounds = true
         } else {
-            userGotItLabel.text = "Your answer was wrong"
+            userGotItLabel.text = "Your answer is wrong!"
+            userGotItLabel.textColor = .systemRed
+            userGotItLabel.layer.borderColor = UIColor.systemRed.cgColor
+            userGotItLabel.layer.borderWidth = 2.0
+            userGotItLabel.layer.cornerRadius = 10
+            userGotItLabel.layer.masksToBounds = true
         }
+        
         answerLabel.text = question?.desp
         questionLabel.text = question?.q
     
-        linksTextView.text = question?.link.joined(separator: "\n")
-//        linkTableView.register(UINib(nibName: K.cellNibName, bundle: nil), forCellReuseIdentifier: K.cellIdentifier)
-                
-//        loadLinks()
+        linksTextView.text = question?.link.joined(separator: "\n\n")
         
         setupGestureRecognizers()
     }
     
 
-    
-    @IBAction func dismissButtonPressed(_ sender: UIButton) {
+    @IBAction func dismissButtonPressed(_ sender: Any) {
         self.dismiss(animated: true)
     }
 }
@@ -61,40 +65,3 @@ private extension AnswerViewController {
         dismiss(animated: true)
     }
 }
-
-
-// MARK: - Setup Table View for links
-//extension AnswerViewController: UITableViewDataSource {
-////    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-////        return question?.link.count ?? 0
-////    }
-////
-////    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-////        let link = question?.link[indexPath.row] ?? ""
-////
-//////        let cell = tableView.dequeueReusableCell(withIdentifier: K.cellIdentifier, for: indexPath) as! LinkTableViewCell
-////
-//////        cell.text = link
-//////        cell.linkLabel.text = link
-////////        cell.linkLabel.backgroundColor = UIColor.white
-//////        cell.linkLabel.textColor = UIColor.blue
-//////        cell.linkLabel.isSelectable = false
-//////        cell.linkLabel.isUserInteractionEnabled = true
-////
-//////        let attributedString = NSMutableAttributedString(string: "Just click here to register")
-//////        let url = URL(string: "https://www.apple.com")!
-////
-////        // Set the 'click here' substring to be the link
-//////        attributedString.setAttributes([.link: url], range: NSMakeRange(5, 10))
-//////
-//////        cell.linkLabel.attributedText = attributedString
-//////        cell.linkLabel.isUserInteractionEnabled = true
-//////        cell.linkLabel.isEditable = false
-////        // Set how links should appear: blue and underlined
-//////        cell.linkLabel.linkTextAttributes = [
-//////            .link: UIColor.blue
-//////        ]
-////
-////        return cell
-////    }
-//}

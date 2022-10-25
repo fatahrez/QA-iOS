@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  SlideInPresentationManager.swift
 //  QA
 //
 //  Created by apple on 23/09/2022.

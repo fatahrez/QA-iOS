@@ -9,6 +9,7 @@
 struct K {
     
     static let goToResultSegue = "goToResult"
+    static let goToHelpSegue = "goToHelp"
     
     static let cellIdentifier = "ReusableCell"
     static let cellNibName = "LinkTableViewCell"

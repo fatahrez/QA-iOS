@@ -28,7 +28,8 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        self.navigationController?.hidesBarsOnTap = true
         
         qaBrain.fetchQuestions()
         updateUI()
@@ -45,6 +46,7 @@ class ViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         loadContainerView()
+        self.view.alpha = 1
         kolodaView.reloadData()
     }
     
@@ -76,7 +78,7 @@ class ViewController: UIViewController {
             containers.append(vc)
         }
     }
-    
+        
     @IBAction func answerBtnTapped(_ sender: UIButton) {
         switch sender.tag {
         case 1:
@@ -131,9 +133,14 @@ class ViewController: UIViewController {
             slideInTransitioningDelegate.disableCompactHeight = true
             destinationVC.transitioningDelegate = slideInTransitioningDelegate
             destinationVC.modalPresentationStyle = .custom
+        } else if segue.identifier == K.goToHelpSegue {
+            _ = segue.destination as! HelpViewController
         }
     }
     
+    @IBAction func helpBtnPressed(_ sender: UIButton) {
+        self.performSegue(withIdentifier: K.goToHelpSegue, sender: self)
+    }
     
 }
 
