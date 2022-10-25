@@ -2,19 +2,23 @@ PODS:
   - Koloda (5.0.1):
     - pop (~> 1.0)
   - pop (1.0.12)
+  - TTTAttributedLabel (2.0.0)
 
 DEPENDENCIES:
   - Koloda
+  - TTTAttributedLabel
 
 SPEC REPOS:
   trunk:
     - Koloda
     - pop
+    - TTTAttributedLabel
 
 SPEC CHECKSUMS:
   Koloda: d07b9199a383abc5898b62aa945a599f5e7c0c4b
   pop: d582054913807fd11fd50bfe6a539d91c7e1a55a
+  TTTAttributedLabel: 8cffe8e127e4e82ff3af1e5386d4cd0ad000b656
 
-PODFILE CHECKSUM: 513898111c18407ae305b804ef5c326662f70174
+PODFILE CHECKSUM: 0b1085ab08e9804ba0cb53b6396fc52aa9fbb8db
 
 COCOAPODS: 1.11.3

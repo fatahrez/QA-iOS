@@ -1,8 +1,8 @@
 //
-//  SlideInPresentationAnimator.swift
+//  ViewController.swift
 //  QA
 //
-//  Created by Abdulfatah Mohamed on 23/10/2022.
+//  Created by apple on 23/09/2022.
 //  Copyright © 2022 apple. All rights reserved.
 //
 
@@ -68,4 +68,3 @@ extension SlideInPresentationAnimator: UIViewControllerAnimatedTransitioning {
     })
   }
 }
-

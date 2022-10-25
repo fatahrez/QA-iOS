@@ -18,7 +18,6 @@ class ViewController: UIViewController {
     @IBOutlet weak var helpBtn: UIButton!
     @IBOutlet weak var falseBtn: UIButton!
     @IBOutlet weak var trueBtn: UIButton!
-    
     @IBOutlet weak var kolodaView: KolodaView!
     
     var qaBrain = QABrain()
@@ -29,6 +28,7 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+
         
         qaBrain.fetchQuestions()
         updateUI()
@@ -52,6 +52,25 @@ class ViewController: UIViewController {
         for index in 0...(qaBrain.questionsList?.count ?? 0)-1 {
             let vc = self.storyboard?.instantiateViewController(withIdentifier: "CardViewController") as! CardViewController
             vc.question = qaBrain.questionsList![index]
+            if index % 8 == 0 {
+                vc.cardViewColor = UIColor.bgCardBlue
+            } else if index == 1 {
+                vc.cardViewColor = UIColor.bgCardPink
+            } else if index % 7 == 0 {
+                vc.cardViewColor = UIColor.bgCardBlack
+            } else if index % 6 == 0 {
+                vc.cardViewColor = UIColor.bgCardOrange
+            } else if index % 5 == 0 {
+                vc.cardViewColor = UIColor.bgCardTeal
+            } else if index % 4 == 0 {
+                vc.cardViewColor = UIColor.bgCardPink
+            } else if index % 3 == 0 {
+                vc.cardViewColor = UIColor.bgCardYellow
+            } else if index % 2 == 0 {
+                vc.cardViewColor = UIColor.bgCardRed
+            } else {
+                vc.cardViewColor = UIColor.bgCardGreen
+            }
             self.addChildViewController(vc)
                 
             containers.append(vc)
@@ -72,11 +91,6 @@ class ViewController: UIViewController {
             print("unknown button pressed")
         }
 
-    }
-    func koloda(_ koloda: KolodaView, didShowCardAt index: Int) {
-        if index % 2 == 0 {
-            
-        }
     }
     
     func koloda(_ koloda: KolodaView, didSwipeCardAt index: Int, in direction: SwipeResultDirection) {

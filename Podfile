@@ -5,6 +5,7 @@ target 'QA' do
 
   # Pods for QA
   pod "Koloda"
+  pod "TTTAttributedLabel"
 
   target 'QATests' do
     inherit! :search_paths

@@ -13,6 +13,7 @@ class AnswerViewController: UIViewController {
     @IBOutlet weak var userGotItLabel: UILabel!
     @IBOutlet weak var answerLabel: UILabel!
     @IBOutlet weak var questionLabel: UILabel!
+    @IBOutlet weak var linksTextView: UITextView!
     @IBOutlet weak var linkTableView: UITableView!
     
     var question: QuestionItem?
@@ -21,7 +22,7 @@ class AnswerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        linkTableView.dataSource = self
+//        linkTableView.dataSource = self
         
         if userGotIt == true {
             userGotItLabel.text = "Your answer was right"
@@ -30,21 +31,16 @@ class AnswerViewController: UIViewController {
         }
         answerLabel.text = question?.desp
         questionLabel.text = question?.q
-        
-        linkTableView.register(UINib(nibName: K.cellNibName, bundle: nil), forCellReuseIdentifier: K.cellIdentifier)
-        
-        loadLinks()
+    
+        linksTextView.text = question?.link.joined(separator: "\n")
+//        linkTableView.register(UINib(nibName: K.cellNibName, bundle: nil), forCellReuseIdentifier: K.cellIdentifier)
+                
+//        loadLinks()
         
         setupGestureRecognizers()
     }
     
-    func loadLinks() {
-        DispatchQueue.main.async {
-            self.linkTableView.reloadData()
-            let indexPath = IndexPath(row: (self.question?.link.count ?? 0) - 1, section: 0)
-            self.linkTableView.scrollToRow(at: indexPath, at: .top, animated: true)
-        }
-    }
+
     
     @IBAction func dismissButtonPressed(_ sender: UIButton) {
         self.dismiss(animated: true)
@@ -68,22 +64,37 @@ private extension AnswerViewController {
 
 
 // MARK: - Setup Table View for links
-extension AnswerViewController: UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return question?.link.count ?? 0
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let link = question?.link[indexPath.row]
-        
-        let attributedString = NSMutableAttributedString(string: link ?? "")
-        attributedString.setAttributes([.link: link ?? ""], range: NSMakeRange(0, link?.count ?? 0))
-        
-        let cell = tableView.dequeueReusableCell(withIdentifier: K.cellIdentifier, for: indexPath) as! LinkTableViewCell
-        cell.linkLabel.attributedText = attributedString
-        cell.linkLabel.isUserInteractionEnabled = true
-        cell.linkLabel.isEditable = false
-        
-        return cell
-    }
-}
+//extension AnswerViewController: UITableViewDataSource {
+////    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+////        return question?.link.count ?? 0
+////    }
+////
+////    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+////        let link = question?.link[indexPath.row] ?? ""
+////
+//////        let cell = tableView.dequeueReusableCell(withIdentifier: K.cellIdentifier, for: indexPath) as! LinkTableViewCell
+////
+//////        cell.text = link
+//////        cell.linkLabel.text = link
+////////        cell.linkLabel.backgroundColor = UIColor.white
+//////        cell.linkLabel.textColor = UIColor.blue
+//////        cell.linkLabel.isSelectable = false
+//////        cell.linkLabel.isUserInteractionEnabled = true
+////
+//////        let attributedString = NSMutableAttributedString(string: "Just click here to register")
+//////        let url = URL(string: "https://www.apple.com")!
+////
+////        // Set the 'click here' substring to be the link
+//////        attributedString.setAttributes([.link: url], range: NSMakeRange(5, 10))
+//////
+//////        cell.linkLabel.attributedText = attributedString
+//////        cell.linkLabel.isUserInteractionEnabled = true
+//////        cell.linkLabel.isEditable = false
+////        // Set how links should appear: blue and underlined
+//////        cell.linkLabel.linkTextAttributes = [
+//////            .link: UIColor.blue
+//////        ]
+////
+////        return cell
+////    }
+//}
